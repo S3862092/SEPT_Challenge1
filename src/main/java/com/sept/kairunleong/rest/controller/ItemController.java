@@ -36,7 +36,6 @@ public class ItemController {
         List<Item> itemsList = items.getItemList();
         for(int i = 0; i < itemsList.size(); i++){
             if(itemsList.get(i).getId().equals(id)){
-                System.out.println("ran");
                 item = itemsList.get(i);
                 i = itemsList.size();
             }
