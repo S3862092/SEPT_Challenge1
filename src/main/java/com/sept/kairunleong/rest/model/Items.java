@@ -13,6 +13,10 @@ public class Items {
         return itemList;
     }
 
+    public int sizeOfItems(){
+        return itemList.size();
+    }
+
     public void setItemList(List<Item>itemList){
         this.itemList = itemList;
     }
