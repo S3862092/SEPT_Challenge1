@@ -3,14 +3,8 @@ package com.sept.kairunleong.rest.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -26,12 +20,6 @@ public class ItemController {
     @Autowired
     private ItemDAO itemDao;
 
-    //test...delete later
-    @RequestMapping("/hello")
-    public String helloWorld(){
-        return "Hello from Spring Boot";
-    }
-
     //Create Item API
     @PostMapping(path = "", consumes = "application/json", produces = "application/json")
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -41,14 +29,19 @@ public class ItemController {
     }
 
     //Get Item API
-    @GetMapping(path = "/item/item{id}", produces = "application/json")
-    public Item getItem(){
+    @GetMapping(path = "/item/{id}", produces = "application/json")
+    public Item getItem(@PathVariable String id){
+        Item item = null;
         Items items = itemDao.getAllItems();
-
-                /*
-        for(int i = 0; i < itemDao.getAllItems(); i++){
-
-        }*/
+        List<Item> itemsList = items.getItemList();
+        for(int i = 0; i < itemsList.size(); i++){
+            if(itemsList.get(i).getId().equals(id)){
+                System.out.println("ran");
+                item = itemsList.get(i);
+                i = itemsList.size();
+            }
+        }
+        return item;
     }
 
     //Get Item List API
@@ -58,6 +51,34 @@ public class ItemController {
     }
 
     //Update Item API
+    @PutMapping("/updateItem")
+    public String updateItems(@RequestBody Item item){
+        String result = "Update Failed!";
+        for(Item currItem : itemDao.getAllItems().getItemList()){
+            if(currItem.getId().equals(item.getId())){
+                currItem.setTitle(item.getTitle());
+                currItem.setDesc(item.getDesc());
+                currItem.setPrice(item.getPrice());
+                currItem.setImagePath(item.getImagePath());
+                result = "Update Successful!";
+            }
+        }
+        return result;
+    }
 
     //Delete Item API
+    @DeleteMapping("/deleteItem/{id}")
+    public String deleteItem(@PathVariable String id){
+        String result = "Delete Failed!";
+        Item item = null;
+        Items items = itemDao.getAllItems();
+        List<Item> itemsList = items.getItemList();
+        for(int i = 0; i < itemsList.size(); i++){
+            if(itemsList.get(i).getId().equals(id)){
+                itemsList.remove(itemsList.get(i));
+                result = "Delete Successful!";
+            }
+        }
+        return result;
+    }
 }
