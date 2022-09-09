@@ -14,7 +14,7 @@ public class ItemDAO {
         list.getItemList().add(new Item("3", "Item3", "Item1 is a bigger box", "../image/image3.jpg",20.0));
     }
 
-    public Items getAllItems(){
+    public static Items getAllItems(){
         return list;
     }
 
